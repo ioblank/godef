@@ -1966,11 +1966,18 @@ func parseImportSpec(p *parser, doc *ast.CommentGroup, decl *ast.GenDecl, _ int)
 		path = &ast.BasicLit{p.pos, p.tok, p.lit}
 		if declIdent == nil {
 			filename := p.fset.Position(path.Pos()).Filename
-			name, err := p.pathToName(litToString(path), filepath.Dir(filename))
-			if name == "" {
-				p.error(path.Pos(), fmt.Sprintf("cannot find identifier for package %q: %v", litToString(path), err))
+			packagePath := litToString(path)
+
+			// workaround for C package
+			if packagePath == "C" {
+				declIdent = &ast.Ident{NamePos: path.ValuePos, Name: "C"}
 			} else {
-				declIdent = &ast.Ident{NamePos: path.ValuePos, Name: name}
+				name, err := p.pathToName(packagePath, filepath.Dir(filename))
+				if name == "" {
+					p.error(path.Pos(), fmt.Sprintf("cannot find identifier for package %q: %v", packagePath, err))
+				} else {
+					declIdent = &ast.Ident{NamePos: path.ValuePos, Name: name}
+				}
 			}
 		}
 		p.next()
