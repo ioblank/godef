@@ -10,9 +10,9 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/rogpeppe/godef/go/ast"
-	"github.com/rogpeppe/godef/go/parser"
-	"github.com/rogpeppe/godef/go/token"
+	"github.com/ioblank/godef/go/ast"
+	"github.com/ioblank/godef/go/parser"
+	"github.com/ioblank/godef/go/token"
 )
 
 var testStdlib = flag.Bool("test-stdlib", false, "test all symbols in standard library (will fail)")
